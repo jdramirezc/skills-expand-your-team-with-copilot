@@ -601,17 +601,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Share an activity using the Web Share API or clipboard fallback
   function shareActivity(name, description, schedule) {
-    const shareUrl =
-      window.location.origin +
-      window.location.pathname +
-      "?activity=" +
-      encodeURIComponent(name);
+    const shareUrl = `${window.location.origin}${window.location.pathname}?activity=${encodeURIComponent(name)}`;
     const shareText = `Check out "${name}" at Mergington High School!\n${description}\nSchedule: ${schedule}`;
 
     if (navigator.share) {
       navigator
         .share({ title: name, text: shareText, url: shareUrl })
-        .catch(() => {}); // ignore cancellations
+        .catch(() => {
+          // User cancelled or share was dismissed — no action needed
+        });
     } else {
       navigator.clipboard
         .writeText(shareUrl)
